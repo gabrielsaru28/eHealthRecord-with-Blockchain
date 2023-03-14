@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
+using System.Text.Json;
 
 namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 {
@@ -20,14 +21,20 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         
         public List<Allergies> Allergies { get; set; } = new List<Allergies>();
 
+        public List<Allergies> Allergies2 { get; set; } = new List<Allergies>();
+
+
         public HttpClient Http { get; }
 
         public Allergies AllergyName { get; set; }
 
-        public async Task CreateRecord(HealthRecord record)
+        public async Task CreateRecord(HealthRecordModel record)
         {
             // result is an HttpResponseMessage ( we do not get the list of the healthrecords directly)
-            var result = await _http.PostAsJsonAsync("api/healthrecord", record);
+            var result = await _http.PostAsJsonAsync("api/healthrecord", record); 
+            //   var content = await result.Content.ReadAsStringAsync();
+          
+           // HealthRecord data = JsonSerializer.Deserialize<HealthRecord>(content);
             await SetRecords(result);
         }
 
@@ -35,6 +42,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         private async Task SetRecords(HttpResponseMessage result)
         {
             var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
+            //var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
             Records = response;
             _navigationManager.NavigateTo("healthrecords");
         }
@@ -53,7 +61,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         {
             var result = await _http.GetFromJsonAsync<List<Allergies>>("api/healthrecord/allergies");
             if (result != null)
-                Allergies = result;
+                Allergies2 = result;
 
         }
 
@@ -102,8 +110,8 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         public async Task UpdateRecord(HealthRecord record)
         {
             // result is an HttpResponseMessage ( we do not get the list of the healthrecords directly)
-            var result = await _http.PutAsJsonAsync($"api/healthrecord/ {record.PatientId}", record);
-            //var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
+            var result = await _http.PutAsJsonAsync($"api/healthrecord/{record.PatientId}", record);
+            var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
             await SetRecords(result);
         }
     }   

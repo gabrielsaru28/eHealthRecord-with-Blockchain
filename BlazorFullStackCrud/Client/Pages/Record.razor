@@ -12,33 +12,36 @@
 }
 else
 {
-    <PageTitle>Edit @record.PatientName</PageTitle>
-    <h3>Edit @record.PatientName</h3>
+    <PageTitle>Edit @record2.PatientName</PageTitle>
+    <h3>Edit @record2.PatientName</h3>
 
 }
 
-<EditForm Model="record" OnSubmit="HandleSubmit">
+<EditForm Model="record2" OnSubmit="HandleSubmit">
     
     
     <div>
         <label for="patientname">Patient Name</label>
-        <InputText id="patientname" @bind-Value="record.PatientName" class="form-control"></InputText>
+        <InputText id="patientname" @bind-Value="record2.PatientName" class="form-control"></InputText>
     </div>
 
     <div>
         <label for="medicalhistory">Medical History</label>
-        <InputText id="medicalhistory" @bind-Value="record.MedicalHistory" class="form-control"></InputText>
+        <InputText id="medicalhistory" @bind-Value="record2.MedicalHistory" class="form-control"></InputText>
     </div>
 
     <div>
         <label for="medications">Medications</label>
-        <InputText id="medications" @bind-Value="record.Medications" class="form-control"></InputText>
+        <InputText id="medications" @bind-Value="record2.Medications" class="form-control"></InputText>
     </div>
 
     <div>
         <label for="allergies">Allergies</label>
-        <InputSelect id="allergies" @bind-Value="record.AllergyId" class="form-select">
-            @foreach(var allergy in HealthRecordService.Allergies)
+        
+        <InputSelect id="allergies"  @bind-Value="record2.AllergyId" class="form-select">
+
+           <option value="@aList[0].AllergyId">You need to select!</option>
+            @foreach(var allergy in aList)
             {
                 <option value="@allergy.AllergyId">@allergy.AllergyName</option>
             }
@@ -66,6 +69,11 @@ else
 
     };
 
+    List<Allergies> aList = new List<Allergies>();
+
+
+    HealthRecordModel record2 = new HealthRecordModel();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,8 +86,18 @@ else
         if (Id == null)
         {
             // create a new record
-            record.Allergies = HealthRecordService.Allergies[0];
-            record.AllergyId = record.Allergies.AllergyId;
+            //record.Allergies = HealthRecordService.Allergies[0];
+            //record.AllergyId = record.Allergies.AllergyId;
+            var result = HealthRecordService.Allergies2;
+            foreach (var iterator in result)
+            {
+                var allergiesAdd = new Allergies
+                {
+                    AllergyId = iterator.AllergyId,
+                    AllergyName = iterator.AllergyName
+                };
+                aList.Add(allergiesAdd);
+            }
         }
         else
         {
@@ -91,11 +109,11 @@ else
     {
         if(Id == null)
         {
-            await HealthRecordService.CreateRecord(record);
+            await HealthRecordService.CreateRecord(record2);
         }
         else
         {
-            await HealthRecordService.UpdateRecord(record);
+            await HealthRecordService.UpdateRecord(record2);
         }
     }
 

@@ -6,6 +6,9 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
     {
         List<HealthRecord> Records { get; set; }
         List<Allergies> Allergies { get; set; }
+        List<Allergies> Allergies2 { get; set; }
+
+
         Allergies AllergyName { get; set; }
 
         Task GetAllergies();
@@ -16,7 +19,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         //string GetAllergyName(int id);
 
-        Task CreateRecord(HealthRecord record);
+        Task CreateRecord(HealthRecordModel record2);
         Task UpdateRecord(HealthRecord record);
         Task DeleteRecord(int id);  
 

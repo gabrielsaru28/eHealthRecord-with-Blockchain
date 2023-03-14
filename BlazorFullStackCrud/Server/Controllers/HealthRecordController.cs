@@ -120,13 +120,30 @@ namespace BlazorFullStackCrud.Server.Controllers
 
         // Create a record 
         [HttpPost]
-        public async Task<ActionResult<List<HealthRecord>>> CreateHealthRecord(HealthRecord record)
+        public async Task<ActionResult<List<HealthRecord>>> CreateHealthRecord(HealthRecordModel record)
         {
             //record.Allergies = null;
-            _context.HealthRecords.Add(record);
+            if (record == null)
+                return BadRequest();
+           
+            HealthRecord hrecord = new HealthRecord
+            {
+                PatientName = record.PatientName,
+                MedicalHistory = record.MedicalHistory,
+                Medications = record.Medications,
+                AllergyId = record.AllergyId
+            };
+
+
+            _context.HealthRecords.Add(hrecord);
             await _context.SaveChangesAsync();
 
-            return Ok(await GetDbRecords());
+            //
+            var result = await _context.HealthRecords.Include(sh => sh.Allergies).ToListAsync();
+            //
+            // return Ok(await GetDbRecords());
+            return Ok(result);
+            
         }
 
         // We use the route with the id, because we need to update the actual healthrecord
