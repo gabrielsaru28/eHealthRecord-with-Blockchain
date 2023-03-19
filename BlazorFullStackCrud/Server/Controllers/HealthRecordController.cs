@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace BlazorFullStackCrud.Server.Controllers
 {
     /*      
-        Get the data from the database 
+     *  This class is used to :   
+     *   | 
+     *   . - > Get the data from the database 
      */
     [Route("api/[controller]")]
     [ApiController]
@@ -13,13 +15,11 @@ namespace BlazorFullStackCrud.Server.Controllers
 
         private readonly DataContext _context;
         
-        // Constructor where we inject the DataContext
+        // Constructor, where we inject the DataContext.
         public HealthRecordController(DataContext context)
         {
             _context = context;
         }
-
-        
 
         //// Mock data
         //public static List<Allergies> allergies = new List<Allergies> { 
@@ -79,7 +79,7 @@ namespace BlazorFullStackCrud.Server.Controllers
         [HttpGet("allergies")]
         public async Task<ActionResult<List<Allergies>>> GetAllergies()
         {
-
+            // Variable that is used to put all the allergies into a list.
             var allergies = await _context.Allergies.ToListAsync();
 
             // return status code 200
@@ -89,7 +89,7 @@ namespace BlazorFullStackCrud.Server.Controllers
         [HttpGet("allergies/{id}")]
         public async Task<ActionResult<List<Allergies>>> GetAllergyById(int id)
         {
-
+            // Variable that is used to get all the id's of the allergies.
             var allergies = await _context.Allergies
                 .FirstOrDefaultAsync(a => a.AllergyId == id);
 
@@ -115,7 +115,7 @@ namespace BlazorFullStackCrud.Server.Controllers
         }
 
         /*
-         * Implementation for the Create, Update & Delete on the Server
+         * Implementation for the Create, Update & Delete on the Server.
          */
 
         // Create a record 
@@ -188,9 +188,7 @@ namespace BlazorFullStackCrud.Server.Controllers
 
         /* Return all our records to see the change in the database 
          *
-         *
-         * Helpful when implementing the client, we will navigate back to the 
-         * list of all our records.
+         * Helpful when implementing the client, we will navigate back to the list of all our records.
          */
         private async Task<List<HealthRecord>> GetDbRecords()
         {

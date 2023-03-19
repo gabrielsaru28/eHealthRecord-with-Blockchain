@@ -18,7 +18,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         }
 
         public List<HealthRecord> Records { get; set; } = new List<HealthRecord>();
-        
+
         public List<Allergies> Allergies { get; set; } = new List<Allergies>();
 
         public List<Allergies> Allergies2 { get; set; } = new List<Allergies>();
@@ -28,13 +28,13 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         public Allergies AllergyName { get; set; }
 
+
         public async Task CreateRecord(HealthRecordModel record)
         {
             // result is an HttpResponseMessage ( we do not get the list of the healthrecords directly)
             var result = await _http.PostAsJsonAsync("api/healthrecord", record); 
-            //   var content = await result.Content.ReadAsStringAsync();
-          
-           // HealthRecord data = JsonSerializer.Deserialize<HealthRecord>(content);
+            //var content = await result.Content.ReadAsStringAsync();          
+            //HealthRecord data = JsonSerializer.Deserialize<HealthRecord>(content);
             await SetRecords(result);
         }
 
@@ -62,7 +62,6 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             var result = await _http.GetFromJsonAsync<List<Allergies>>("api/healthrecord/allergies");
             if (result != null)
                 Allergies2 = result;
-
         }
 
         
