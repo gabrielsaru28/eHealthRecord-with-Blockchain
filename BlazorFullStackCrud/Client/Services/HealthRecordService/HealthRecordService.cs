@@ -142,6 +142,9 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
                 Records = result;
         }
 
+        /*
+         
+         */
         public async Task<HealthRecord> GetSingleHealthRecord(int id)
         {
             var result = await _http.GetFromJsonAsync<HealthRecord>($"api/healthrecord/{id}");

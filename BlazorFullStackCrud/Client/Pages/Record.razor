@@ -13,14 +13,12 @@
 }
 else
 {
-    <PageTitle>Edit @record2.PatientName</PageTitle>
-    <h3>Edit @record2.PatientName</h3>
+    <PageTitle>Edit @record.PatientName</PageTitle>
+    <h3>Edit @record.PatientName</h3>
 
 }
 
 <EditForm Model="record" OnSubmit="HandleSubmit">
-    
-    
     <div>
         <label for="patientname">Patient Name</label>
         <InputText id="patientname" @bind-Value="record.PatientName" class="form-control"></InputText>
@@ -41,9 +39,9 @@ else
         
         <InputSelect id="allergies"  @bind-Value="record.AllergyId" class="form-select">
 
-           <option value="@aList[0].AllergyId">You need to select!</option>
-
-            @foreach(var allergy in aList)
+@*           <option value="@aList[0].AllergyId">You need to select!</option>
+*@
+            @foreach(var allergy in HealthRecordService.Allergies)
             {
                 <option value="@allergy.AllergyId">@allergy.AllergyName</option>
             }
@@ -90,7 +88,7 @@ else
             //record.Allergies = HealthRecordService.Allergies[0];
             //record.AllergyId = record.Allergies.AllergyId;
             
-            var result = HealthRecordService.Allergies2;
+            var result = HealthRecordService.Allergies;
             foreach (var iterator in result)
             {
                 var allergiesAdd = new Allergies
