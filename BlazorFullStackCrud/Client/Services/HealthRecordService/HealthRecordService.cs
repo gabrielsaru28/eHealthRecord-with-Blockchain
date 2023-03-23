@@ -91,7 +91,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         {
             var result = await _http.GetFromJsonAsync<List<Allergies>>("api/healthrecord/allergies");
             if (result != null)
-                Allergies2 = result;
+                Allergies = result;
         }
 
         
@@ -110,7 +110,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         //public async string GetAllergyName(int id)
         //{
 
-        //    var result =  await _http.GetFromJsonAsync<Allergies>($"api/healthrecord/allergies/{id}");
+        //    var result = await _http.GetFromJsonAsync<Allergies>($"api/healthrecord/allergies/{id}");
         //    if (result != null)
         //    {
         //        return result.AllergyName;
