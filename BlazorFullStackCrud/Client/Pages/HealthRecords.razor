@@ -18,15 +18,17 @@
             <th>Allergy Name</th>
             @* For the button to edit or show  *@
             <th></th>
-
         </tr>
     </thead>
     
+
+
     <tbody>
         @* 
         For each loop where we would acces
         the HealthRecords form the WebAPI
         
+        Here, it uploads on the UI the data from the HealthRecordService (and the HealthRecordService gets the data from the HealthRecordController)
         *@
         @foreach(var record in HealthRecordService.Records)
         {
@@ -36,7 +38,6 @@
                 <td>@record.MedicalHistory</td>
                 <td>@record.Medications</td>
                
-           
                 <td>@record.Allergies.AllergyName </td>
 
                 <td>
@@ -45,9 +46,9 @@
             
             </tr>
         }
-
-
     </tbody>
+
+
 
 </table>
 <button class="btn btn-primary" @onclick="CreateNewRecord">Create New Record</button>

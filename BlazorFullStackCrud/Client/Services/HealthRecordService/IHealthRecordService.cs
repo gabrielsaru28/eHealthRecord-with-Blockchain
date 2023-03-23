@@ -19,7 +19,10 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         //string GetAllergyName(int id);
 
-        Task CreateRecord(HealthRecordModel record2);
+        /*
+         * CRUD Operations Methods
+         */
+        Task CreateRecord(HealthRecord record);
         Task UpdateRecord(HealthRecord record);
         Task DeleteRecord(int id);  
 

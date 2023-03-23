@@ -5,15 +5,19 @@
      * We'll inject the data context to do that.
      */
 
+    /*
+     * Contains/Extends the DbContext class that represents the database context for the application. 
+     *
+     * This class is responsible for managing the database connection, querying the database, and tracking changes to the data
+     *
+     */
+
+
     public class DataContext : DbContext
     {
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options)
-        {
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
-        }
-
-        // To see the data, we 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -22,6 +26,8 @@
                 .WithMany(a => a.HealthRecords)
                 .HasForeignKey(hr => hr.AllergyId); 
 
+
+            // Mock data for Allergies.
             modelBuilder.Entity<Allergies>().HasData(
 
                  new Allergies { AllergyId = 1, AllergyName = "Alergie la praf" },
@@ -29,7 +35,7 @@
                  new Allergies { AllergyId = 3, AllergyName = "Alergie la capsuni"}
                 );
 
-
+            // Mock data for HealthRecords
             modelBuilder.Entity<HealthRecord>().HasData(
 
                 new HealthRecord
@@ -37,7 +43,7 @@
                     PatientId = 1,
                     PatientName = "Ion",
                     MedicalHistory = "Healthy",
-                    Medications = "Pastile test",
+                    Medications = "Ibuprofen",
                     AllergyId = 1
 
                 },
@@ -47,7 +53,7 @@
                     PatientId = 2,
                     PatientName = "John",
                     MedicalHistory = "Healthy",
-                    Medications = "Pastile lactoza",
+                    Medications = "Nurofen",
                     AllergyId = 2
                 },
 
@@ -56,7 +62,7 @@
                     PatientId = 3,
                     PatientName = "Mark",
                     MedicalHistory = "Very Healthy",
-                    Medications = "Pastile1212 lactoza",
+                    Medications = "Aspirina",
                     AllergyId = 3
                 }
                  );
@@ -64,11 +70,14 @@
             base.OnModelCreating(modelBuilder);
         }
 
-
-        // Very important - - The DbSets (Database sets)
-        // Whenever you want to see an entity represented as a table in your db
-        // You have to add the database set
-
+        /*
+         * Very important ---The DbSets (Database sets)
+         *
+         * Whenever you want to see an entity represented as a table in your Db
+         * You have to add the database set
+        */
+        
+        // Tabels
         public DbSet<HealthRecord> HealthRecords { get; set; }
 
         public DbSet<Allergies> Allergies  { get; set; }
