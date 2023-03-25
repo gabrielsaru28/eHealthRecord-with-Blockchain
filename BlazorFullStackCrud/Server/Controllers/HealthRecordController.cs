@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace BlazorFullStackCrud.Server.Controllers
 {
@@ -209,10 +210,14 @@ namespace BlazorFullStackCrud.Server.Controllers
             dbRecord.MedicalHistory = record.MedicalHistory;
             dbRecord.Medications = record.Medications;
             dbRecord.AllergyId = record.AllergyId;
-
+          
             await _context.SaveChangesAsync();
 
-            return Ok(await GetDbRecords());
+            var dbRecords = await GetDbRecords();
+            var json = JsonSerializer.Serialize(dbRecords);
+            return Content(json, "application/json");
+           
+          //  return Ok(await GetDbRecords());
         }
 
 
