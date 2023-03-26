@@ -26,7 +26,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         Task UpdateRecord(HealthRecord record);
         Task DeleteRecord(int id);
 
-       // Task<string> SemneazaRecord(int patientId);
+        Task<string> SemneazaRecord(int patientId);
 
 
     }

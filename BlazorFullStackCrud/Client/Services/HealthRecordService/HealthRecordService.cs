@@ -155,28 +155,28 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         }
 
 
-        //public async Task<string> SemneazaRecord(int patientId)
-        //{
-        //    // Get the record from the database
-        //    var record = await _context.HealthRecords
-        //        .Include(r => r.Allergies)
-        //        .FirstOrDefaultAsync(r => r.PatientId == patientId);
+        public async Task<string> SemneazaRecord(int patientId)
+        {
+            // Get the record from the database
+            var record = await _context.HealthRecords
+                .Include(r => r.Allergies)
+                .FirstOrDefaultAsync(r => r.PatientId == patientId);
 
-        //    if (record == null)
-        //    {
-        //        throw new InvalidOperationException("Record not found");
-        //    }
+            if (record == null)
+            {
+                throw new InvalidOperationException("Record not found");
+            }
 
-        //    // Send the record to Ethereum and get the hash value
-        //    var hash = await SendToEthereum(record);
+            // Send the record to Ethereum and get the hash value
+            var hash = await SendToEthereum(record);
 
-        //    // Save the hash value to the database
-        //    record.Signature = hash;
-        //    _context.HealthRecords.Update(record);
-        //    await _context.SaveChangesAsync();
+            // Save the hash value to the database
+            record.Signature = hash;
+            _context.HealthRecords.Update(record);
+            await _context.SaveChangesAsync();
 
-        //    return hash;
-        //}
+            return hash;
+        }
 
 
     }

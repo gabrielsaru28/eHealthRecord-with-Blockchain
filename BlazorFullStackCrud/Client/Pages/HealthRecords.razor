@@ -52,13 +52,13 @@
                         <i class="oi oi-pencil"></i>
                     </button>
                 </td>
-@*
+
                 <td>
                     <!-- Sign button -->
                     <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
                         Semneaza
                     </button>
-                </td>*@
+                </td>
 
             </tr>
         }
@@ -88,10 +88,10 @@
         NavigationManager.NavigateTo("record");
     }
 
-    //void SignHealthRecord(int patientId)
-    //{
-    //    HealthRecordService.SemneazaRecord(patientId);
-    //}
+    void SignHealthRecord(int patientId)
+    {
+        HealthRecordService.SemneazaRecord(patientId);
+    }
 
     
   
