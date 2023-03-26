@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using NBitcoin.Secp256k1;
 using System.Net.Http.Json;
 using System.Text.Json;
 
@@ -62,7 +63,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         {
             // result is an HttpResponseMessage ( we do not get the list of the healthrecords directly)
             var result = await _http.PutAsJsonAsync($"api/healthrecord/{record.PatientId}", record);
-            var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
+          //  var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
             await SetRecords(result);
         }
 
@@ -80,9 +81,9 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         private async Task SetRecords(HttpResponseMessage result)
         {
-            var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
             //var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
-            Records = response;
+            //var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
+           // Records = response;
             _navigationManager.NavigateTo("healthrecords");   
         }
 
@@ -153,6 +154,30 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             throw new Exception("HealthRecord not found!");
         }
 
- 
-    }   
+
+        //public async Task<string> SemneazaRecord(int patientId)
+        //{
+        //    // Get the record from the database
+        //    var record = await _context.HealthRecords
+        //        .Include(r => r.Allergies)
+        //        .FirstOrDefaultAsync(r => r.PatientId == patientId);
+
+        //    if (record == null)
+        //    {
+        //        throw new InvalidOperationException("Record not found");
+        //    }
+
+        //    // Send the record to Ethereum and get the hash value
+        //    var hash = await SendToEthereum(record);
+
+        //    // Save the hash value to the database
+        //    record.Signature = hash;
+        //    _context.HealthRecords.Update(record);
+        //    await _context.SaveChangesAsync();
+
+        //    return hash;
+        //}
+
+
+    }
 }

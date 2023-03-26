@@ -113,6 +113,7 @@ namespace BlazorFullStackCrud.Server.Controllers
         public async Task<ActionResult<HealthRecord>> GetSingeHealthRecord(int id)
         {
             var record = await _context.HealthRecords
+                .Include ( a => a.Allergies)
                 .FirstOrDefaultAsync( h => h.PatientId == id);
            
             if (record == null)
@@ -132,7 +133,9 @@ namespace BlazorFullStackCrud.Server.Controllers
          */
         private async Task<List<HealthRecord>> GetDbRecords()
         {
-            return await _context.HealthRecords.Include(sh => sh.Allergies).ToListAsync();
+            return await _context.HealthRecords.
+                Include(sh => sh.Allergies)
+                .ToListAsync();
         }
 
 
@@ -213,11 +216,12 @@ namespace BlazorFullStackCrud.Server.Controllers
           
             await _context.SaveChangesAsync();
 
+            
             var dbRecords = await GetDbRecords();
             var json = JsonSerializer.Serialize(dbRecords);
             return Content(json, "application/json");
-           
-          //  return Ok(await GetDbRecords());
+
+         //   return Ok(await GetDbRecords());
         }
 
 
