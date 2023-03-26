@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace BlazorFullStackCrud.Shared
 {
-    public class HealthRecord
+    public class HealthRecordModel
     {
-        [Key]
-        public int PatientId { get; set; }
 
         public string PatientName { get; set; } = string.Empty;
 
@@ -18,9 +16,7 @@ namespace BlazorFullStackCrud.Shared
 
         public string Medications { get; set; } = string.Empty;
 
-        public int? AllergyId { get; set; }
-
-        public Allergies? Allergies { get; set; } = null!;
+        public int AllergyId { get; set; }
 
     }
 }

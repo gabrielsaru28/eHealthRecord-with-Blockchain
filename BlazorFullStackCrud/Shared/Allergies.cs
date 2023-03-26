@@ -15,6 +15,6 @@ namespace BlazorFullStackCrud.Shared
 
         public string AllergyName { get; set; } = string.Empty;
 
-        public ICollection<HealthRecord> HealthRecords { get; set; } = null!;
+        public ICollection<HealthRecord>? HealthRecords { get; set; } = null!;
     }
 }

@@ -5,6 +5,7 @@
 @page "/record/{id:int}"   
 
 @inject IHealthRecordService HealthRecordService
+
 @if (Id == null)
 {
     <PageTitle>Create a new Record</PageTitle>
@@ -18,8 +19,6 @@ else
 }
 
 <EditForm Model="record" OnSubmit="HandleSubmit">
-    
-    
     <div>
         <label for="patientname">Patient Name</label>
         <InputText id="patientname" @bind-Value="record.PatientName" class="form-control"></InputText>
@@ -37,7 +36,11 @@ else
 
     <div>
         <label for="allergies">Allergies</label>
-        <InputSelect id="allergies" @bind-Value="record.AllergyId" class="form-select">
+        
+        <InputSelect id="allergies"  @bind-Value="record.AllergyId" class="form-select">
+
+@*           <option value="@aList[0].AllergyId">You need to select!</option>
+*@
             @foreach(var allergy in HealthRecordService.Allergies)
             {
                 <option value="@allergy.AllergyId">@allergy.AllergyName</option>
@@ -66,6 +69,10 @@ else
 
     };
 
+    List<Allergies> aList = new List<Allergies>();
+
+    HealthRecordModel record2 = new HealthRecordModel();
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -78,8 +85,19 @@ else
         if (Id == null)
         {
             // create a new record
-            record.Allergies = HealthRecordService.Allergies[0];
-            record.AllergyId = record.Allergies.AllergyId;
+            //record.Allergies = HealthRecordService.Allergies[0];
+            //record.AllergyId = record.Allergies.AllergyId;
+            
+            var result = HealthRecordService.Allergies;
+            foreach (var iterator in result)
+            {
+                var allergiesAdd = new Allergies
+                {
+                    AllergyId = iterator.AllergyId,
+                    AllergyName = iterator.AllergyName
+                };
+                aList.Add(allergiesAdd);
+            }
         }
         else
         {
@@ -87,18 +105,29 @@ else
         }
     }
 
+    /*
+     * Method that handles the action when you press submit.
+     * 
+     */
     async Task HandleSubmit()
     {
+        // If the Id of the created healthrecord data is NULL, which means is new created
         if(Id == null)
-        {
+        {   
+            // Then it creates the healthrecord and adds it to the database.
             await HealthRecordService.CreateRecord(record);
         }
+        // Otherwise
         else
-        {
+        {   // It updates it.
             await HealthRecordService.UpdateRecord(record);
         }
     }
 
+    /*
+     * Method that activates when the button 'Delete Record' is pressed.
+     * 
+     */
     async Task DeleteRecord()
     {
         await HealthRecordService.DeleteRecord(record.PatientId);

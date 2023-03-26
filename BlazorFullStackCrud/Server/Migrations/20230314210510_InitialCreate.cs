@@ -34,7 +34,7 @@ namespace BlazorFullStackCrud.Server.Migrations
                     PatientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MedicalHistory = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Medications = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AllergyId = table.Column<int>(type: "int", nullable: false)
+                    AllergyId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -43,8 +43,7 @@ namespace BlazorFullStackCrud.Server.Migrations
                         name: "FK_HealthRecords_Allergies_AllergyId",
                         column: x => x.AllergyId,
                         principalTable: "Allergies",
-                        principalColumn: "AllergyId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AllergyId");
                 });
 
             migrationBuilder.InsertData(
