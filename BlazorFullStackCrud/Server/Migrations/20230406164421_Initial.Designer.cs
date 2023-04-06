@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlazorFullStackCrud.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230314210510_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230406164421_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -82,6 +82,10 @@ namespace BlazorFullStackCrud.Server.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Signature")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("PatientId");
 
                     b.HasIndex("AllergyId");
@@ -94,24 +98,27 @@ namespace BlazorFullStackCrud.Server.Migrations
                             PatientId = 1,
                             AllergyId = 1,
                             MedicalHistory = "Healthy",
-                            Medications = "Pastile test",
-                            PatientName = "Ion"
+                            Medications = "Ibuprofen",
+                            PatientName = "Ion",
+                            Signature = ""
                         },
                         new
                         {
                             PatientId = 2,
                             AllergyId = 2,
                             MedicalHistory = "Healthy",
-                            Medications = "Pastile lactoza",
-                            PatientName = "John"
+                            Medications = "Nurofen",
+                            PatientName = "John",
+                            Signature = ""
                         },
                         new
                         {
                             PatientId = 3,
                             AllergyId = 3,
                             MedicalHistory = "Very Healthy",
-                            Medications = "Pastile1212 lactoza",
-                            PatientName = "Mark"
+                            Medications = "Aspirina",
+                            PatientName = "Mark",
+                            Signature = ""
                         });
                 });
 

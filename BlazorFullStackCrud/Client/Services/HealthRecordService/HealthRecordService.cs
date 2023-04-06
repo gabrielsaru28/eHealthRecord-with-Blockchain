@@ -2,6 +2,9 @@
 using NBitcoin.Secp256k1;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Nethereum.Web3;
+using Nethereum.Hex.HexTypes;
+using System.Text;
 
 namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 {
@@ -22,6 +25,12 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
     public class HealthRecordService : IHealthRecordService
     {
+
+        // added recently
+        private readonly string _alchemyApiKey;
+        private readonly string _contractAddress;
+        private readonly string _privateKey;
+
 
         private readonly HttpClient _http;
 
@@ -44,6 +53,10 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         public Allergies AllergyName { get; set; }
 
+      
+        
+        
+        
         /*
          *   Method triggered when pressing 'Create New Record' in the UI.
          */
@@ -154,30 +167,48 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             throw new Exception("HealthRecord not found!");
         }
 
+        /*
+        public async Task<string> SemneazaRecord(int patientId)
+        {
+            // Get the record from the database
+            var record = await _context.HealthRecords
+                .Include(r => r.Allergies)
+                .FirstOrDefaultAsync(r => r.PatientId == patientId);
 
-        //public async Task<string> SemneazaRecord(int patientId)
-        //{
-        //    // Get the record from the database
-        //    var record = await _context.HealthRecords
-        //        .Include(r => r.Allergies)
-        //        .FirstOrDefaultAsync(r => r.PatientId == patientId);
+            if (record == null)
+            {
+                throw new InvalidOperationException("Record not found");
+            }
 
-        //    if (record == null)
-        //    {
-        //        throw new InvalidOperationException("Record not found");
-        //    }
+            // Send the record to Ethereum and get the hash value
+            var hash = await SendToEthereum(record);
 
-        //    // Send the record to Ethereum and get the hash value
-        //    var hash = await SendToEthereum(record);
+            // Save the hash value to the database
+            record.Signature = hash;
+            _context.HealthRecords.Update(record);
+            await _context.SaveChangesAsync();
 
-        //    // Save the hash value to the database
-        //    record.Signature = hash;
-        //    _context.HealthRecords.Update(record);
-        //    await _context.SaveChangesAsync();
+            return hash;
+        }
 
-        //    return hash;
-        //}
+        public async Task<string> SendToEthereum(HealthRecord record)
+        {
+            // Connect to the Ethereum node
+            var web3 = new Web3("http://localhost:8545");
 
+            // Create a new contract instance
+            var contract = web3.Eth.GetContract("<ABI>", "<Contract Address>");
 
+            // Encode the record data as a byte array
+            var data = Encoding.UTF8.GetBytes($"{record.PatientId}-{record.PatientName}-{record.MedicalHistory}-{record.Medications}-{record.Allergies.AllergyName}");
+
+            // Send a transaction to the contract
+            var receipt = await contract.GetFunction("addRecord").SendTransactionAndWaitForReceiptAsync("<Sender Address>", new HexBigInteger(1000000), new HexBigInteger(0), data);
+
+            // Return the transaction hash
+            return receipt.TransactionHash;
+        }
+
+        */
     }
 }

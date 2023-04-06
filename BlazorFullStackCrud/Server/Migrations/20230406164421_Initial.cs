@@ -7,7 +7,7 @@
 namespace BlazorFullStackCrud.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,7 +34,8 @@ namespace BlazorFullStackCrud.Server.Migrations
                     PatientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MedicalHistory = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Medications = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AllergyId = table.Column<int>(type: "int", nullable: true)
+                    AllergyId = table.Column<int>(type: "int", nullable: true),
+                    Signature = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,12 +59,12 @@ namespace BlazorFullStackCrud.Server.Migrations
 
             migrationBuilder.InsertData(
                 table: "HealthRecords",
-                columns: new[] { "PatientId", "AllergyId", "MedicalHistory", "Medications", "PatientName" },
+                columns: new[] { "PatientId", "AllergyId", "MedicalHistory", "Medications", "PatientName", "Signature" },
                 values: new object[,]
                 {
-                    { 1, 1, "Healthy", "Pastile test", "Ion" },
-                    { 2, 2, "Healthy", "Pastile lactoza", "John" },
-                    { 3, 3, "Very Healthy", "Pastile1212 lactoza", "Mark" }
+                    { 1, 1, "Healthy", "Ibuprofen", "Ion", "" },
+                    { 2, 2, "Healthy", "Nurofen", "John", "" },
+                    { 3, 3, "Very Healthy", "Aspirina", "Mark", "" }
                 });
 
             migrationBuilder.CreateIndex(

@@ -3,8 +3,8 @@
 @*   Registered and Injected our HealthRecordService      *@
 @inject IHealthRecordService HealthRecordService
 @inject NavigationManager NavigationManager
-@using  Nethereum.Hex.HexConvertors.Extensions;
-@using  Nethereum.Web3;
+@using Nethereum.Hex.HexConvertors.Extensions;
+@using Nethereum.Web3;
 
 
 <PageTitle>Health Records</PageTitle>
@@ -25,19 +25,19 @@
 
         </tr>
     </thead>
-    
+
 
 
     <tbody>
-        @* 
+        @*
         For each loop where we would acces
         the HealthRecords form the WebAPI
-        
+
         Here, it uploads on the UI the data from the HealthRecordService (and the HealthRecordService gets the data from the HealthRecordController)
         *@
 
         <!-- Loop through the HealthRecords and display them -->
-        @foreach(var record in HealthRecordService.Records)
+        @foreach (var record in HealthRecordService.Records)
         {
             <tr>
                 <td>@record.PatientId</td>
@@ -52,13 +52,13 @@
                         <i class="oi oi-pencil"></i>
                     </button>
                 </td>
-@*
-                <td>
-                    <!-- Sign button -->
-                    <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
-                        Semneaza
-                    </button>
-                </td>*@
+                @*
+            <td>
+            <!-- Sign button -->
+            <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
+            Semneaza
+            </button>
+            </td>*@
 
             </tr>
         }
@@ -71,10 +71,10 @@
 
 
 @code {
-    // We use the 
+    // We use the
     protected override async Task OnInitializedAsync()
     {
-        await HealthRecordService.GetHealthRecords();        
+        await HealthRecordService.GetHealthRecords();
     }
 
     void ShowHealthRecord(int id)
@@ -93,6 +93,6 @@
     //    HealthRecordService.SemneazaRecord(patientId);
     //}
 
-    
-  
+
+
 }
