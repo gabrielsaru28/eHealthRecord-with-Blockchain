@@ -25,9 +25,7 @@
 
         </tr>
     </thead>
-
-
-
+       
     <tbody>
         @*
         For each loop where we would acces
@@ -71,7 +69,6 @@
 
 
 @code {
-    // We use the
     protected override async Task OnInitializedAsync()
     {
         await HealthRecordService.GetHealthRecords();
@@ -87,12 +84,4 @@
     {
         NavigationManager.NavigateTo("record");
     }
-
-    //void SignHealthRecord(int patientId)
-    //{
-    //    HealthRecordService.SemneazaRecord(patientId);
-    //}
-
-
-
 }

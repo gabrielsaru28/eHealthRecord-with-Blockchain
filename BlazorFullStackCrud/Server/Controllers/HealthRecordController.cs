@@ -41,7 +41,6 @@ namespace BlazorFullStackCrud.Server.Controllers
             _context = context;
         }
 
-
         /*
          *  This is a GET API endpoint that returns a list of HealthRecord objects from a database. 
          *  
