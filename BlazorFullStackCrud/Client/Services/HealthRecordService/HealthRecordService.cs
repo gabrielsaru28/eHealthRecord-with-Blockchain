@@ -167,6 +167,8 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             throw new Exception("HealthRecord not found!");
         }
 
+
+
         /*
         public async Task<string> SemneazaRecord(int patientId)
         {
