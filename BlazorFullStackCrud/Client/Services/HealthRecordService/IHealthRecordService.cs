@@ -6,9 +6,6 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
     {
         List<HealthRecord> Records { get; set; }
         List<Allergies> Allergies { get; set; }
-        List<Allergies> Allergies2 { get; set; }
-
-
         Allergies AllergyName { get; set; }
 
         Task GetAllergies();
@@ -17,7 +14,6 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         Task<HealthRecord> GetSingleHealthRecord(int id);
         Task<Allergies> GetAllergyById(int id);
 
-        //string GetAllergyName(int id);
 
         /*
          * CRUD Operations Methods
@@ -26,10 +22,10 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         Task UpdateRecord(HealthRecord record);
         Task DeleteRecord(int id);
 
-        
-        // Added the signature of the method in the interface
-       // Task<string> SemneazaRecord(int patientId);
 
+        // Blockchain related methods
+        Task SignHealthRecord(int patientId);
 
+       // Task AddHealthRecordToBlockchain(HealthRecord record, string privateKey);
     }
 }

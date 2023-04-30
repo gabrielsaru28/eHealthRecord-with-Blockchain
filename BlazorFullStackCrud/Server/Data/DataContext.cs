@@ -12,32 +12,36 @@
      *
      */
 
-
     public class DataContext : DbContext
     {
-
+        // We need a constructor
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
+        // We need to override the OnModelCreating method
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
+            /*
+            - We need to describe the relationship between the HealthRecord and Allergies classes.
+            - This is a many to one relationship.
+            - So the foreign key is in the HealthRecord class.
+            - And the HealthRecord class has a collection of Allergies.
+            - So the HealthRecord class has a property that is an Allergies class, and the Allergies class has a collection of HealthRecords.
+            - So the Allergies class has a property that is a collection of HealthRecords.
+            */
             modelBuilder.Entity<HealthRecord>()
                 .HasOne<Allergies>(hr => hr.Allergies)
                 .WithMany(a => a.HealthRecords)
-                .HasForeignKey(hr => hr.AllergyId); 
-
-
+                .HasForeignKey(hr => hr.AllergyId);
+            
             // Mock data for Allergies.
             modelBuilder.Entity<Allergies>().HasData(
-
                  new Allergies { AllergyId = 1, AllergyName = "Alergie la praf" },
                  new Allergies { AllergyId = 2, AllergyName = "Alergie la lactoza" },
                  new Allergies { AllergyId = 3, AllergyName = "Alergie la capsuni"}
                 );
-
+            
             // Mock data for HealthRecords
             modelBuilder.Entity<HealthRecord>().HasData(
-
                 new HealthRecord
                 {
                     PatientId = 1,
@@ -45,9 +49,7 @@
                     MedicalHistory = "Healthy",
                     Medications = "Ibuprofen",
                     AllergyId = 1
-
                 },
-
                 new HealthRecord
                 {
                     PatientId = 2,
@@ -56,7 +58,6 @@
                     Medications = "Nurofen",
                     AllergyId = 2
                 },
-
                 new HealthRecord
                 {
                     PatientId = 3,
@@ -66,16 +67,9 @@
                     AllergyId = 3
                 }
                  );
-
             base.OnModelCreating(modelBuilder);
         }
-
-        /*
-         * Very important ---The DbSets (Database sets)
-         *
-         * Whenever you want to see an entity represented as a table in your Db
-         * You have to add the database set
-        */
+        
         
         // Tabels
         public DbSet<HealthRecord> HealthRecords { get; set; }

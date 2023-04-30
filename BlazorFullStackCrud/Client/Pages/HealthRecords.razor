@@ -1,11 +1,18 @@
 ﻿@page "/healthrecords"
 
 @*   Registered and Injected our HealthRecordService      *@
-@inject IHealthRecordService HealthRecordService
+
 @inject NavigationManager NavigationManager
+@inject IHealthRecordService HealthRecordService
+
 @using Nethereum.Hex.HexConvertors.Extensions;
 @using Nethereum.Web3;
+@using Newtonsoft.Json;
+@using System.Text;
 
+@using Nethereum.Contracts;
+@using Nethereum.Web3.Accounts;
+@using Nethereum.Contracts.Extensions;
 
 <PageTitle>Health Records</PageTitle>
 
@@ -20,8 +27,8 @@
             <th>Medications</th>
             <th>Allergy Name</th>
 
-            <th></th> <!-- For the button to edit or show -->
-            <th></th> <!-- For the button to sign the record -->
+            <th>Edit</th> <!-- For the button to edit or show -->
+            <th>Sign</th> <!-- For the button to sign the record -->
 
         </tr>
     </thead>
@@ -50,38 +57,55 @@
                         <i class="oi oi-pencil"></i>
                     </button>
                 </td>
+
                 @*
-            <td>
-            <!-- Sign button -->
-            <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
-            Semneaza
-            </button>
-            </td>*@
+                    When the user clicks the "Sign" button, 
+                    the component should call a method on the server-side BlockchainController, passing the ID of the selected health record as a parameter.
+                *@
+                <td>
+                    <!-- Sign button -->
+                    <!-- Triggers the signing process   --> 
+                    <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
+                        <i class="oi oi-key"></i>
+                    </button>
+                </td>
 
             </tr>
         }
     </tbody>
-
-
-
 </table>
 <button class="btn btn-primary" @onclick="CreateNewRecord">Create New Record</button>
 
 
 @code {
+    
     protected override async Task OnInitializedAsync()
     {
         await HealthRecordService.GetHealthRecords();
     }
 
-    void ShowHealthRecord(int id)
-    {
-        NavigationManager.NavigateTo($"record/{id}");
-    }
-
-
     void CreateNewRecord()
     {
         NavigationManager.NavigateTo("record");
     }
+
+    void ShowHealthRecord(int id)
+    {
+        NavigationManager.NavigateTo($"record/{id}");
+    }  
+
+    async Task SignHealthRecord(int id)
+    {
+        try
+        {
+            // Call the SignHealthRecord method in the HealthRecordService
+            await HealthRecordService.SignHealthRecord(id);
+        }
+        catch (Exception ex)
+        {
+            // Handle the error
+            Console.WriteLine(ex.Message);
+        }
+    }
+
 }

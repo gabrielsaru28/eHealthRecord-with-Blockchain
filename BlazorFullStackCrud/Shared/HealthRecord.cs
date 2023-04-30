@@ -7,6 +7,18 @@ using System.Threading.Tasks;
 
 namespace BlazorFullStackCrud.Shared
 {
+    /*
+     * This class is for the Health Record table
+     * It has a collection of Allergies, because a health record can have many allergies, but an allergy can only have one Health Record.
+     *
+     * So the collection of allergies is in the Health Record class, and the FK is in the Allergies class.
+     -> The foreign key is the allergy id
+     --> this is a many - to - one relationship.
+     
+     -> The allergy id is the foreign key
+     --> so this is a one - to - many relationship.
+   
+     */
     public class HealthRecord
     {
         [Key]
@@ -24,7 +36,7 @@ namespace BlazorFullStackCrud.Shared
 
         public string Signature { get; set; } = string.Empty;
 
-       // public string PatientName { get; set; } = string.Empty;
+        //public string? TransactionHash { get; set; }
 
     }
 }

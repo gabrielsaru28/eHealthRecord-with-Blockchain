@@ -5,6 +5,10 @@ using System.Text.Json;
 using Nethereum.Web3;
 using Nethereum.Hex.HexTypes;
 using System.Text;
+using Nethereum.Contracts;
+using System.Numerics;
+using Nethereum.Web3.Accounts;
+using System.Net.Http;
 
 namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 {
@@ -21,17 +25,8 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
      *
      *  4. It receives input from the Controller, performs operations on the data, and returns the result to the Controller.
      */
-
-
     public class HealthRecordService : IHealthRecordService
     {
-
-        // added recently
-        private readonly string _alchemyApiKey;
-        private readonly string _contractAddress;
-        private readonly string _privateKey;
-
-
         private readonly HttpClient _http;
 
         private readonly NavigationManager _navigationManager;
@@ -46,17 +41,12 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
         public List<Allergies> Allergies { get; set; } = new List<Allergies>();
 
-        public List<Allergies> Allergies2 { get; set; } = new List<Allergies>();
-
 
         public HttpClient Http { get; }
 
         public Allergies AllergyName { get; set; }
+     
 
-      
-        
-        
-        
         /*
          *   Method triggered when pressing 'Create New Record' in the UI.
          */
@@ -91,7 +81,9 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             await SetRecords(result);
         }
 
-
+        /*
+         * This method navigates to the 'healthrecords' page after receiving a response from an HTTP request.
+         */
         private async Task SetRecords(HttpResponseMessage result)
         {
             //var response = await result.Content.ReadFromJsonAsync<List<HealthRecord>>();
@@ -121,19 +113,6 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
         }
 
 
-        //public async string GetAllergyName(int id)
-        //{
-
-        //    var result = await _http.GetFromJsonAsync<Allergies>($"api/healthrecord/allergies/{id}");
-        //    if (result != null)
-        //    {
-        //        return result.AllergyName;
-        //    }
-        //    throw new Exception("Allergies not found!");
-
-
-        //}
-
         /*   
          *  Retrieves a list of health records from the API by making an HTTP GET request to the "api/healthrecord" endpoint. 
          *    
@@ -156,9 +135,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
                 Records = result;
         }
 
-        /*
-         
-         */
+        // Retrieves a single health record from the API by making an HTTP GET request to the "api/healthrecord/{id}" endpoint.
         public async Task<HealthRecord> GetSingleHealthRecord(int id)
         {
             var result = await _http.GetFromJsonAsync<HealthRecord>($"api/healthrecord/{id}");
@@ -167,50 +144,35 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
             throw new Exception("HealthRecord not found!");
         }
 
-
-
+        // Signs a health record by making an HTTP POST request to the "api/blockchain/{id}" endpoint.
         /*
-        public async Task<string> SemneazaRecord(int patientId)
+         * We're using the _http in this method to call the API endpoint, defined in the BlockchainController, and retrieve the transaction hash.
+         *
+         * We're then using the _http again to call the 'AddSignatureToHealthRecord' API endpoint, defined in the HealthRecordController, to add the transaction hash to the health record in the database.
+         */
+        public async Task SignHealthRecord(int id)
         {
-            // Get the record from the database
-            var record = await _context.HealthRecords
-                .Include(r => r.Allergies)
-                .FirstOrDefaultAsync(r => r.PatientId == patientId);
+            // Call the SignHealthRecord API endpoint in the BlockchainController
+            var response = await _http.PostAsync($"api/blockchain/{id}", null);
 
-            if (record == null)
+            if (response.IsSuccessStatusCode)
             {
-                throw new InvalidOperationException("Record not found");
+                // Get the transaction hash from the response body
+                var transactionHash = await response.Content.ReadAsStringAsync();
+
+                // Add the transaction hash to the health record in the database
+                await _http.PostAsJsonAsync($"api/healthrecords/{id}/addsignature", transactionHash);
+
+                // Refresh the health record list
+                await GetHealthRecords();
             }
-
-            // Send the record to Ethereum and get the hash value
-            var hash = await SendToEthereum(record);
-
-            // Save the hash value to the database
-            record.Signature = hash;
-            _context.HealthRecords.Update(record);
-            await _context.SaveChangesAsync();
-
-            return hash;
+            else
+            {
+                // Handle the error
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                throw new Exception(errorMessage);
+            }
         }
 
-        public async Task<string> SendToEthereum(HealthRecord record)
-        {
-            // Connect to the Ethereum node
-            var web3 = new Web3("http://localhost:8545");
-
-            // Create a new contract instance
-            var contract = web3.Eth.GetContract("<ABI>", "<Contract Address>");
-
-            // Encode the record data as a byte array
-            var data = Encoding.UTF8.GetBytes($"{record.PatientId}-{record.PatientName}-{record.MedicalHistory}-{record.Medications}-{record.Allergies.AllergyName}");
-
-            // Send a transaction to the contract
-            var receipt = await contract.GetFunction("addRecord").SendTransactionAndWaitForReceiptAsync("<Sender Address>", new HexBigInteger(1000000), new HexBigInteger(0), data);
-
-            // Return the transaction hash
-            return receipt.TransactionHash;
-        }
-
-        */
     }
 }
