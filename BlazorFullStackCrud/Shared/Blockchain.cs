@@ -11,6 +11,11 @@ namespace BlazorFullStackCrud.Shared
         public string AlchemyApiKey { get; set; }
         public string MetaMaskPrivateKey { get; set; }
         public string NodeWebsocketUrl { get; set; }
-        public string NodeHttpsUrl { get; set; }
+
+        public string ContractAddress { get; set; }
+        public string Abi { get; set; }
+        public string AccountAddress { get; set; }
+
+
     }
 }

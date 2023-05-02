@@ -2,6 +2,9 @@
 using Nethereum.Contracts;
 using Nethereum.Web3;
 using BlazorFullStackCrud.Server.Data;
+using Nethereum.Signer;
+using Nethereum.Web3.Accounts;
+using BlazorFullStackCrud.Shared;
 
 namespace BlazorFullStackCrud.Server.BlockchainServices
 {
@@ -17,9 +20,13 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
          * The constructor for the BlockchainService class takes the following parameters:
          *
          * web3: An instance of the Web3 class, which provides access to the Ethereum blockchain.
+         * 
          * contractAddress: The address of the deployed smart contract on the Ethereum blockchain.
+         * 
          * abi: The Application Binary Interface (ABI) of the smart contract, which specifies its methods and parameters.
+         * 
          * accountAddress: The Ethereum address of the account that will be used to sign the transaction.
+         * 
          * dbContext: An instance of the ApplicationDbContext class, which provides access to the database.
          */
         public BlockchainServices(Web3 web3, string contractAddress, string abi, string accountAddress, DataContext dbContext)
