@@ -1,0 +1,363 @@
+
+====================================================================================================================
+Q : How to communicate with a deployed Smart Contract to the Blockchain that uses Test ETH (Sepolia) from MetaMask, 
+from a Blazor WebAssembly Application that has to Apply Blockchain in the Health Field (Bachelor's project) ? 
+====================================================================================================================
+
+A:  To communicate with the deployed smart contract on the Ethereum network, we need to follow these steps:
+
+----------------------------------------
+1. Define the contract ABI and address:
+----------------------------------------
+
+- The contract ABI is a JSON file that describes the interface of the smart contract, including its methods, parameters, and return types. 
+- The contract address is the unique identifier of the deployed contract on the blockchain.
+
+------------------------------------
+2. Connect to the Ethereum network :
+------------------------------------
+
+- We can use the Nethereum library to connect to the Ethereum network. 
+- We need to create an instance of the Web3 class and set its provider to the test network provided by Alchemy :
+
+````
+ex : var web3 = new Web3("https://eth-rinkeby.alchemyapi.io/v2/[API key here]"); 
+````
+-------------------
+3. Get an account : 
+-------------------
+
+- To sign and send transactions on the Ethereum network, we need an account with some test ETH. 
+- We can create a new account using the Account class provided by Nethereum:
+
+````
+ex : var account = Account.Create(“[private key here]”);
+````
+
+----------------------
+4. Load the contract :
+----------------------
+
+- We need to load the contract using its ABI and address.
+- We can create a new instance of the 'Contract' class provided by Nethereum and pass :
+
+a. The ABI 
+
+and 
+
+b. Contract address of the contract -- to its constructor:
+
+````
+ex : var contract = web3.Eth.GetContract(SmartContract.ABI, SmartContract.ContractAddress);
+````
+
+----------------------------------
+5. Sign and send the transaction :
+----------------------------------
+
+- We need to call the smart contract method to add the health record to the blockchain.
+- We can use the 'SendTransactionAndWaitForReceiptAsync' method provided by Nethereum to sign and send the transaction to the Ethereum network:
+
+````
+ex : 
+````
+var function = contract.GetFunction("addHealthRecord");
+var transaction = await function.SendTransactionAsync(account.Address, gas, value, input);
+
+- We need to replace addHealthRecord with the name of the method that adds a new health record to the contract, 
+and provide the appropriate gas, value, and input parameters.
+
+------------------------------
+6. Save the transaction hash :
+------------------------------
+
+- After sending the transaction, we can save its hash to our database along with the health record data. 
+- We can use the TransactionHash property of the Nethereum.RPC.Eth.DTOs.TransactionReceipt class to get the hash :
+    
+    ````
+    ex : var receipt = await web3.Eth.Transactions.GetTransactionReceipt.SendRequestAsync(transaction);
+    ```` var hash = receipt.TransactionHash;
+
+-----------------
+7. Update the UI:   
+-----------------
+
+- We can update the UI to show a message that the health record has been added to the blockchain, 
+or we can refresh the list of health records to show the newly added record.
+
+
+====================================================================================================================
+STEP BY STEP Approach: 
+
+How to communicate with a deployed Smart Contract to the Blockchain that uses Test ETH (Sepolia) from MetaMask, 
+from a Blazor WebAssembly Application that has to Apply Blockchain in the Health Field (Bachelor's project) ?
+====================================================================================================================
+
+---------------------------
+Step 1: Set up your project
+---------------------------
+
+• First, you need to create a Blazor WebAssembly application with the necessary components. 
+• This will involve creating three projects: a client-side project, a shared project, and a server-side project. 
+• The client-side project will contain the user interface and make calls to the server-side project, which will handle requests to the Ethereum blockchain using the Nethereum library. 
+• The shared project will contain any common code that both the client and server-side projects need.
+
+-------------------------
+Step 2: Install Nethereum
+-------------------------
+
+• Next, you need to install the Nethereum library in your server-side project. 
+• This can be done using the NuGet Package Manager in Visual Studio or by using the command-line interface.
+
+---------------------------
+Step 3: Connect to MetaMask
+---------------------------
+
+• You need to connect to MetaMask, which is a browser extension that enables users to interact with the Ethereum network. 
+• After installing MetaMask, you will need to create an account and add some Test ETH to it. 
+• Then, you can connect MetaMask to your application by using the HTTPS or WebSockets provider. 
+• You will need to use the Alchemy API key to connect to the Ethereum network.
+
+---------------------------------
+Step 4: Create the Smart Contract
+---------------------------------
+
+• You need to create a smart contract using the Remix IDE. 
+• You should define the contract ABI, which is a JSON file that describes the functions and variables in the smart contract. 
+• You will also need to get the contract bytecode, which is the compiled version of the contract that can be deployed to the Ethereum network.
+
+----------------------------------
+Step 5: Write the Server-Side Code
+----------------------------------
+
+• In your server-side project, you need to create a class that will handle requests to the Ethereum network. 
+• You will use the Nethereum library to do this. 
+• In this class, you will define a method that takes the necessary input parameters, such as the patient's ID and medical record, and sends a transaction to the Ethereum network. 
+• You will need to use the Alchemy API key to sign the transaction and send it to the Ethereum network. 
+• You will also need to define a method to retrieve the hash of the block, which is the signature of the transaction.
+
+----------------------------------------
+Step 6: Update the Health Record Service
+----------------------------------------
+
+• You need to update the IHealthRecordService interface to include a method for signing the medical record. 
+• Then, you need to implement this method in the HealthRecordService class. 
+• This method will call the method you defined in the server-side class to send a transaction to the Ethereum network and retrieve the hash of the block.
+
+---------------------
+Step 7: Update the UI
+---------------------
+
+• Finally, you need to update the UI to include a button for signing the medical record. 
+• When the user clicks this button, you will call the SignHealthRecord method in the HealthRecordService class, which will send a transaction to the Ethereum network and retrieve the hash of the block. 
+• You will then save this hash to the database.    
+
+
+
+====================================================================================================================
+
+App FLOW 
+
+====================================================================================================================
+
+    
+The overall flow of the application could be as follows:
+
+1. The user navigates to the health records page and selects a health record to sign.
+2. The user clicks the "Sign" button, which triggers a call to the SignHealthRecord method on the server-side BlockchainController.
+3. The SignHealthRecord method in the BlockchainController calls the SignHealthRecord method in the BlockchainServices class, to send a transaction to the signHealthRecord method on the smart contract with the ID of the selected health record.
+4. The SignHealthRecord method in the BlockchainServices class returns the transaction hash, which is sent back to the client as the response to the HTTP POST request.
+5. The client receives the transaction hash and calls the AddSignatureToHealthRecord method on the server-side BlockchainController with the ID of the selected health record and the transaction hash.
+6. The AddSignatureToHealthRecord method in the BlockchainController calls the AddSignatureToHealthRecord method in the BlockchainServices class to update the health record in the database with the transaction hash.
+7.The user sees a message indicating that the health record has been successfully signed and the transaction has been added to the blockchain.
+
+
+
+
+
+
+
+
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
+
+import "@openzeppelin/contracts@4.8.2/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts@4.8.2/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts@4.8.2/token/ERC721/extensions/ERC721URIStorage.sol";
+//import "@openzeppelin/contracts@4.8.2/access/Ownable.sol";
+import "@openzeppelin/contracts@4.8.2/utils/Counters.sol";
+
+contract HealthRecord is ERC721, ERC721Enumerable, ERC721URIStorage {
+    using Counters for Counters.Counter;
+
+    Counters.Counter private _tokenIdCounter;
+    uint256 MAX_SUPPLY = 10000;
+
+    constructor() ERC721("HealthRecord", "HRD") {
+                owner = msg.sender;
+
+    }
+
+    struct Record {
+    
+    uint256 patientId;
+    string patientName;
+    string medicalHistory;
+    string medications;
+    uint256 allergyId;
+    string signature;
+    
+    }
+
+    mapping (uint256 => Record) records;
+    address owner;
+
+  
+   /*
+    *  signHealthRecord method that takes the same fields as the HealthRecord class in the C# 
+    *  
+    * When this method is called, it creates a new Record struct with the provided data and stores it in the records mapping with the patientId as the key.
+    */
+    function signHealthRecord(
+        uint256 _patientId,
+        string memory _patientName,
+        string memory _medicalHistory,
+        string memory _medications,
+        uint256 _allergyId,
+        string memory _signature
+
+    ) public {
+        
+        require(msg.sender == owner, "Only the owner can add records.");
+
+        records[_patientId] = Record({
+            patientId: _patientId,
+            patientName: _patientName,
+            medicalHistory: _medicalHistory,
+            medications: _medications,
+            allergyId: _allergyId,
+            signature: _signature
+        });
+    }
+
+    /*
+     *  The getHealthRecord method is used to retrieve a record from the records mapping based on the patientId.
+     */
+    function getHealthRecord(uint256 _patientId) public view returns (
+        uint256,
+        string memory,
+        string memory,
+        string memory,
+        uint256,
+        string memory
+    ) {
+        Record memory record = records[_patientId];
+        return (
+            record.patientId,
+            record.patientName,
+            record.medicalHistory,
+            record.medications,
+            record.allergyId,
+            record.signature
+        );
+    }
+
+
+    function safeMint(address to, string memory uri) public  {
+        /*
+         * Declaring a uint256 variable called tokenId, 
+         * that actually stores the current tokenId that the id counter is keeping track of 
+         */
+        uint256 tokenId = _tokenIdCounter.current(); // Gives the current number of token id's
+
+        // Telling that we require something
+        // We require the tokenId to be <= max_supply, if not, the message pops out. 
+        require(tokenId <= MAX_SUPPLY, "I'm sorry, all NFT's have been minted.");
+
+        /*
+         * We are incrementing this number making sure that the next NFT will create 
+         * will have an incremental number so zero one 
+         */
+        _tokenIdCounter.increment();
+
+        /*
+         * Here we're actually minting the NFT.
+         *
+         * Creates a new entry onto the Blockchain, and create your NFT and send your NFT 
+         * to the 'to' wallet address (does't matter if it is a Smart Contract Address or a Wallet Address)
+         
+         P.S : IT WILL COST SOME GAS.
+         */
+        _safeMint(to, tokenId);
+
+        /*
+         * We're assigning a Token URI to our NFT.
+         *
+         * The Token URI, is the URI containing the MetaData that contains all the properties that will be
+         * used to populate our NFT page, such as properties, description and etc.
+         */
+        _setTokenURI(tokenId, uri);
+    }
+
+
+    // The following functions are overrides required by Solidity.
+
+    /*
+     * Marked as internal 
+     -- similar to private
+     -- the only difference is that also contracts that are inheriting from our contract
+     will be able to access this function 
+     */
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId, uint256 batchSize)
+        internal
+        override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    }
+
+    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
+        super._burn(tokenId);
+    }
+
+    /*
+     * The function that OpenSea and Variable will call to get the URI of your token.
+     *
+     * What it does ? 
+     *
+     -- Passes a TokenId (for example 0 or 1) and get back the value of the token uri
+     associated with that tokenid
+     
+     -- View modifier
+     --> it is about functions that are writing onto the Blockchain
+     --> and functions that are reading from the Blockchain
+
+     in this case we're only reading, trying to get the token uri of our NFT, so NO WRITING
+
+     IF we re marking a function with VIEW, and you're calling this function from YOUR wallet and not 
+     from another smart contract, you won't pay any gas.
+
+     If another Smart Contract is calling this function, because in that case it will need gas.  
+     */
+    function tokenURI(uint256 tokenId)
+        public
+        view // not WRITING ONTO the Blockchain, and potentially when called from your wallet won't cost you gas.
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
+    }
+
+    /*
+     * Essentially it's telling anyone calling our Smart Contract 
+     * if a certain kind of interface, a certaing kind of feature 
+     * is supported or not.
+     */
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+}
