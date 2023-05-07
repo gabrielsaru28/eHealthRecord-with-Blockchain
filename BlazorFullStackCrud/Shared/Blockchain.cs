@@ -16,6 +16,5 @@ namespace BlazorFullStackCrud.Shared
         public string Abi { get; set; }
         public string AccountAddress { get; set; }
 
-
     }
 }

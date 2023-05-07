@@ -17,15 +17,9 @@ builder.Services.AddSingleton(blockchainSettings);
 
 // This registers the IBlockchainServices interface and the BlockchainServices implementation with the DI container as a scoped service.
 // The AddScoped method is used to register the IBlockchainServices interface and the BlockchainServices implementation with the DI container as a scoped service. The lambda expression provided as the second argument creates a new instance of the BlockchainServices class and passes in the required dependencies, including the DataContext instance obtained from the DI container using the GetRequiredService method.
-builder.Services.AddScoped<IBlockchainServices, BlockchainServices>(s =>
-    new BlockchainServices(
-        new Web3(blockchainSettings.NodeWebsocketUrl),
-        blockchainSettings.ContractAddress,
-        blockchainSettings.Abi,
-        blockchainSettings.AccountAddress,
-        s.GetRequiredService<DataContext>()
-    )
-);
+builder.Services.AddScoped<IBlockchainServices, BlockchainServices>();
+
+
 // Register the Web3 instance using the values from the Blockchain settings
 builder.Services.AddSingleton(x => new Web3(blockchainSettings.NodeWebsocketUrl));
 

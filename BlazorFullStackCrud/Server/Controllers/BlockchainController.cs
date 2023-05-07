@@ -34,11 +34,20 @@ namespace BlazorFullStackCrud.Server.Controllers
           to send a transaction to the signHealthRecord method on the smart contract with the ID of the selected health record.
          */
         [HttpPost("{id}")]
-        public async Task<IActionResult> SignHealthRecord(int healthRecordId)
+        public async Task<IActionResult> SignHealthRecord(int id)
         {
             try
             {
-                var transactionHash = await _blockchainServices.SignHealthRecord(healthRecordId);
+
+                /*
+                 * Call the SignHealthRecord method of the BlockchainServices class, to send a transaction of the signHealthRecord method on the Smart Contract
+                 * with the ID of the selected health record.
+                 *
+                 * The method returns the hash of the transaction.
+                
+                 * The transaction hash is sent back to the client as the response to the HTTP POST request.
+                */
+                var transactionHash = await _blockchainServices.SignHealthRecord(id);
                 return Ok(transactionHash);
             }
             catch (Exception ex)

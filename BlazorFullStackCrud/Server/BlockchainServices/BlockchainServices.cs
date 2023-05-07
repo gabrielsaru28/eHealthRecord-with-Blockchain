@@ -1,19 +1,17 @@
-﻿using System.Threading.Tasks;
-using Nethereum.Contracts;
+﻿using Nethereum.Contracts;
 using Nethereum.Web3;
-using BlazorFullStackCrud.Server.Data;
-using Nethereum.Signer;
 using Nethereum.Web3.Accounts;
-using BlazorFullStackCrud.Shared;
 
 namespace BlazorFullStackCrud.Server.BlockchainServices
 {
     public class BlockchainServices : IBlockchainServices
     {
-
+        private readonly string _contractAddress;
+        private readonly string _abi;
         private readonly Web3 _web3;
-        private readonly Contract _contract;
         private readonly string _accountAddress;
+        private readonly string _accountPrivateKey;
+        private readonly Contract _contract;
         private readonly DataContext _dbContext;
 
         /*
@@ -29,23 +27,28 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
          * 
          * dbContext: An instance of the ApplicationDbContext class, which provides access to the database.
          */
-        public BlockchainServices(Web3 web3, string contractAddress, string abi, string accountAddress, DataContext dbContext)
+        public BlockchainServices(IConfiguration config)
         {
-            _web3 = web3;
-            _contract = _web3.Eth.GetContract(abi, contractAddress);
-            _accountAddress = accountAddress;
-            _dbContext = dbContext;
+            _contractAddress = config.GetValue<string>("Blockchain:ContractAddress");
+            _abi = config.GetValue<string>("Blockchain:Abi");
+            _accountAddress = config.GetValue<string>("Blockchain:AccountAddress");
+            _accountPrivateKey = config.GetValue<string>("Blockchain:MetaMaskPrivateKey");
+            _web3 = new Web3(config.GetValue<string>("Blockchain:NodeWebsocketUrl"));
+            _contract = _web3.Eth.GetContract(_abi, _contractAddress);
+            //_dbContext = new Data.DataContext();
         }
 
+
         /*
-         * The SignHealthRecord method takes an id parameter and sends a transaction to the signHealthRecord method on the smart contract with that ID. The method returns the hash of the transaction.
+         * The SignHealthRecord method takes an id parameter, and sends a transaction to the signHealthRecord method on the smart contract with that ID. 
+         * 
+         * The method returns the hash of the transaction.
          */
         /*
          4. The SignHealthRecord method in the BlockchainServices class returns the transaction hash, which is sent back to the client as the response to the HTTP POST request.
          */
         public async Task<string> SignHealthRecord(int id)
         {
-            
             var function = _contract.GetFunction("signHealthRecord");
             var transactionInput = function.CreateTransactionInput(_accountAddress, new { id });
             var transactionHash = await _web3.Eth.TransactionManager.SendTransactionAsync(transactionInput);

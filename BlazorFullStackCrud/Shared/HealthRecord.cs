@@ -35,8 +35,5 @@ namespace BlazorFullStackCrud.Shared
         public Allergies? Allergies { get; set; } = null!;
 
         public string Signature { get; set; } = string.Empty;
-
-        //public string? TransactionHash { get; set; }
-
     }
 }
