@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BlazorFullStackCrud.Server.BlockchainServices;
-
+using Nethereum.Hex.HexTypes;
 
 namespace BlazorFullStackCrud.Server.Controllers
 {
@@ -47,7 +47,10 @@ namespace BlazorFullStackCrud.Server.Controllers
                 
                  * The transaction hash is sent back to the client as the response to the HTTP POST request.
                 */
-                var transactionHash = await _blockchainServices.SignHealthRecord(id);
+                //var uintId = new HexBigInteger(id);
+                //var transactionHash = await _blockchainServices.SignHealthRecord(id);
+
+                var transactionHash = await _blockchainServices.SignHealthRecord(id00);
                 return Ok(transactionHash);
             }
             catch (Exception ex)

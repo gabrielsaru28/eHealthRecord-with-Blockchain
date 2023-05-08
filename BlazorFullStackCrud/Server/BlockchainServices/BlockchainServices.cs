@@ -1,6 +1,7 @@
 ﻿using Nethereum.Contracts;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
+using Newtonsoft.Json.Linq;
 
 namespace BlazorFullStackCrud.Server.BlockchainServices
 {
@@ -30,12 +31,17 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         public BlockchainServices(IConfiguration config)
         {
             _contractAddress = config.GetValue<string>("Blockchain:ContractAddress");
-            _abi = config.GetValue<string>("Blockchain:Abi");
+            //_abi = config.GetValue<string>("Blockchain:Abi");
             _accountAddress = config.GetValue<string>("Blockchain:AccountAddress");
             _accountPrivateKey = config.GetValue<string>("Blockchain:MetaMaskPrivateKey");
             _web3 = new Web3(config.GetValue<string>("Blockchain:NodeWebsocketUrl"));
-            _contract = _web3.Eth.GetContract(_abi, _contractAddress);
+            //_contract = _web3.Eth.GetContract(_abi, _contractAddress);
             //_dbContext = new Data.DataContext();
+        
+            var contractAbiJson = File.ReadAllText("contractabi.json");
+            var contractAbi = JObject.Parse(contractAbiJson)["Abi"].ToString();
+        
+            _contract = _web3.Eth.GetContract(contractAbi, _contractAddress);
         }
 
 
@@ -50,7 +56,9 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         public async Task<string> SignHealthRecord(int id)
         {
             var function = _contract.GetFunction("signHealthRecord");
-            var transactionInput = function.CreateTransactionInput(_accountAddress, new { id });
+            //var transactionInput = function.CreateTransactionInput(_accountAddress, new { id });
+            var transactionInput = function.CreateTransactionInput(_accountAddress, new { id = new Nethereum.Hex.HexTypes.HexBigInteger((ulong)id) });
+
             var transactionHash = await _web3.Eth.TransactionManager.SendTransactionAsync(transactionInput);
             return transactionHash;
         }
