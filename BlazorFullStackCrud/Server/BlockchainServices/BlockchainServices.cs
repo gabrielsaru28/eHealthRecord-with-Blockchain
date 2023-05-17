@@ -1,4 +1,6 @@
 ﻿using Nethereum.Contracts;
+using Nethereum.Hex.HexTypes;
+using Nethereum.Signer;
 using Nethereum.Web3;
 using Nethereum.Web3.Accounts;
 using Newtonsoft.Json.Linq;
@@ -56,9 +58,7 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         public async Task<string> SignHealthRecord(int id)
         {
             var function = _contract.GetFunction("signHealthRecord");
-            //var transactionInput = function.CreateTransactionInput(_accountAddress, new { id });
             var transactionInput = function.CreateTransactionInput(_accountAddress, new { id = new Nethereum.Hex.HexTypes.HexBigInteger((ulong)id) });
-
             var transactionHash = await _web3.Eth.TransactionManager.SendTransactionAsync(transactionInput);
             return transactionHash;
         }

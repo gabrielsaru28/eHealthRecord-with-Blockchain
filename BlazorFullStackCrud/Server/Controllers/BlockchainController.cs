@@ -4,7 +4,6 @@ using Nethereum.Hex.HexTypes;
 
 namespace BlazorFullStackCrud.Server.Controllers
 {
-
     /*
      * Attribute to the class definition to indicate that this is a controller that will handle HTTP requests:
      */
@@ -38,7 +37,6 @@ namespace BlazorFullStackCrud.Server.Controllers
         {
             try
             {
-
                 /*
                  * Call the SignHealthRecord method of the BlockchainServices class, to send a transaction of the signHealthRecord method on the Smart Contract
                  * with the ID of the selected health record.
@@ -46,11 +44,8 @@ namespace BlazorFullStackCrud.Server.Controllers
                  * The method returns the hash of the transaction.
                 
                  * The transaction hash is sent back to the client as the response to the HTTP POST request.
-                */
-                //var uintId = new HexBigInteger(id);
-                //var transactionHash = await _blockchainServices.SignHealthRecord(id);
-
-                var transactionHash = await _blockchainServices.SignHealthRecord(id00);
+                 */
+                var transactionHash = await _blockchainServices.SignHealthRecord(id);
                 return Ok(transactionHash);
             }
             catch (Exception ex)
