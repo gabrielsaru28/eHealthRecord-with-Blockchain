@@ -1,9 +1,14 @@
 ﻿using Nethereum.Contracts;
+using Nethereum.Web3;
+using Newtonsoft.Json.Linq;
+using Nethereum.ABI.FunctionEncoding;
+using Nethereum.RPC.Eth.DTOs;
 using Nethereum.Hex.HexTypes;
 using Nethereum.Signer;
-using Nethereum.Web3;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.Web3.Accounts;
-using Newtonsoft.Json.Linq;
+using BlazorFullStackCrud.Client.Services.HealthRecordService;
+using Nethereum.ABI.Model;
 
 namespace BlazorFullStackCrud.Server.BlockchainServices
 {
@@ -16,7 +21,7 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         private readonly string _accountPrivateKey;
         private readonly Contract _contract;
         private readonly DataContext _dbContext;
-
+        private readonly string _ganacheUrl;
         /*
          * The constructor for the BlockchainService class takes the following parameters:
          *
@@ -30,22 +35,20 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
          * 
          * dbContext: An instance of the ApplicationDbContext class, which provides access to the database.
          */
-        public BlockchainServices(IConfiguration config)
+        public BlockchainServices(IConfiguration config, DataContext dbContext)
         {
             _contractAddress = config.GetValue<string>("Blockchain:ContractAddress");
-            //_abi = config.GetValue<string>("Blockchain:Abi");
             _accountAddress = config.GetValue<string>("Blockchain:AccountAddress");
             _accountPrivateKey = config.GetValue<string>("Blockchain:MetaMaskPrivateKey");
             _web3 = new Web3(config.GetValue<string>("Blockchain:NodeWebsocketUrl"));
-            //_contract = _web3.Eth.GetContract(_abi, _contractAddress);
-            //_dbContext = new Data.DataContext();
-        
+            _dbContext = dbContext;
             var contractAbiJson = File.ReadAllText("contractabi.json");
             var contractAbi = JObject.Parse(contractAbiJson)["Abi"].ToString();
-        
             _contract = _web3.Eth.GetContract(contractAbi, _contractAddress);
+            var ganacheUrl = config["Blockchain:GanacheUrl"];
+            var account = new Account("0x6362fbe9c5dd15dafe9dd344f2757df9ba5045f343053bdfe824da193cce5a76");
+            _web3 = new Web3(account, ganacheUrl);
         }
-
 
         /*
          * The SignHealthRecord method takes an id parameter, and sends a transaction to the signHealthRecord method on the smart contract with that ID. 
@@ -55,13 +58,29 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         /*
          4. The SignHealthRecord method in the BlockchainServices class returns the transaction hash, which is sent back to the client as the response to the HTTP POST request.
          */
+
         public async Task<string> SignHealthRecord(int id)
         {
-            var function = _contract.GetFunction("signHealthRecord");
-            var transactionInput = function.CreateTransactionInput(_accountAddress, new { id = new Nethereum.Hex.HexTypes.HexBigInteger((ulong)id) });
-            var transactionHash = await _web3.Eth.TransactionManager.SendTransactionAsync(transactionInput);
+
+            var web3 = new Web3("http://localhost:8545");
+            // Sender account
+            var privateKey = "0x6362fbe9c5dd15dafe9dd344f2757df9ba5045f343053bdfe824da193cce5a76";
+            var senderAddress = "0xa197f7CE436E4B6edf980a00571D1B04519861E6"; // Replace with the actual sender address
+            var account = new Account(privateKey);
+            var recipientAddress = "0xa197f7CE436E4B6edf980a00571D1B04519861E6"; // Replace with the desired recipient address
+
+            // Send transaction
+            var transactionHash = await web3.TransactionManager.SendTransactionAsync(
+                new Nethereum.RPC.Eth.DTOs.TransactionInput
+                {
+                    From = senderAddress,
+                    To = recipientAddress,
+                    Value = new Nethereum.Hex.HexTypes.HexBigInteger(1), // Amount (in wei)
+                    Gas = new Nethereum.Hex.HexTypes.HexBigInteger(21000) // Gas limit
+                });
             return transactionHash;
         }
+
 
         /*
          * The AddSignatureToHealthRecord method takes a transactionHash and updates the health record with the corresponding ID in the database with the signature.
@@ -69,7 +88,7 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
         public async Task AddSignatureToHealthRecord(int healthRecordId, string transactionHash)
         {
             var healthRecord = await _dbContext.HealthRecords.FirstOrDefaultAsync(h => h.PatientId == healthRecordId);
-            
+
             // If the health record exists, update the signature with the transaction hash and save the changes to the database.
             if (healthRecord != null)
             {

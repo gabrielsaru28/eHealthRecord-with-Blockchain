@@ -24,8 +24,6 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
 
 
         // Blockchain related methods
-        Task SignHealthRecord(int patientId);
-
-       // Task AddHealthRecordToBlockchain(HealthRecord record, string privateKey);
+        Task<string> SignHealthRecord(int id);
     }
 }

@@ -26,6 +26,7 @@
             <th>Medical History</th>
             <th>Medications</th>
             <th>Allergy Name</th>
+            <th>Signature</th>
 
             <th>Edit</th> <!-- For the button to edit or show -->
             <th>Sign</th> <!-- For the button to sign the record -->
@@ -51,6 +52,7 @@
                 <td>@record.MedicalHistory</td>
                 <td>@record.Medications</td>
                 <td>@record.Allergies.AllergyName </td>
+                <td>@record.Signature</td>
 
                 <td>
                     <!-- Edit button -->
@@ -69,6 +71,8 @@
                     <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
                         <i class="oi oi-key"></i>
                     </button>
+
+                    
                 </td>
 
             </tr>
@@ -100,7 +104,14 @@
         try
         {
             // Call the SignHealthRecord method in the HealthRecordService
-            await HealthRecordService.SignHealthRecord(id);
+            var transactionHash = await HealthRecordService.SignHealthRecord(id);
+
+            // Update the health record with the transaction hash
+            var record = HealthRecordService.Records.FirstOrDefault(r => r.PatientId == id);
+            if (record != null)
+            {
+                record.Signature = transactionHash;
+            }
         }
         catch (Exception ex)
         {

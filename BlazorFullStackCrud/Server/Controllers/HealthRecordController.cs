@@ -138,6 +138,23 @@ namespace BlazorFullStackCrud.Server.Controllers
         }
 
 
+        [HttpPost("{id}/addsignature")]
+        public async Task<ActionResult> AddSignature(int id, [FromBody] string transactionHash)
+        {
+            var healthRecord = await _context.HealthRecords.FindAsync(id);
+            if (healthRecord == null)
+            {
+                return NotFound("Health record not found");
+            }
+
+            healthRecord.Signature = transactionHash;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+
         /*
          * Implementation for the Create, Update & Delete on the Server.
          */
@@ -212,15 +229,14 @@ namespace BlazorFullStackCrud.Server.Controllers
             dbRecord.MedicalHistory = record.MedicalHistory;
             dbRecord.Medications = record.Medications;
             dbRecord.AllergyId = record.AllergyId;
-          
+            dbRecord.Signature = record.Signature;
+
             await _context.SaveChangesAsync();
 
             
             var dbRecords = await GetDbRecords();
             var json = JsonSerializer.Serialize(dbRecords);
             return Content(json, "application/json");
-
-         //   return Ok(await GetDbRecords());
         }
 
 
