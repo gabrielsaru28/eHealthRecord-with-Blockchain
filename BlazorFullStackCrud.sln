@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFullStackCrud.Server", "BlazorFullStackCrud\Server\BlazorFullStackCrud.Server.csproj", "{337A4C19-EDF0-4F98-9401-22A9094C5F81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFullStackCrud.Server", "BlazorFullStackCrud\Server\BlazorFullStackCrud.Server.csproj", "{337A4C19-EDF0-4F98-9401-22A9094C5F81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFullStackCrud.Client", "BlazorFullStackCrud\Client\BlazorFullStackCrud.Client.csproj", "{8102232E-1407-488A-8987-94570408261D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFullStackCrud.Client", "BlazorFullStackCrud\Client\BlazorFullStackCrud.Client.csproj", "{8102232E-1407-488A-8987-94570408261D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorFullStackCrud.Shared", "BlazorFullStackCrud\Shared\BlazorFullStackCrud.Shared.csproj", "{DDD57F38-BA96-4808-8EE2-F0467A5F42BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorFullStackCrud.Shared", "BlazorFullStackCrud\Shared\BlazorFullStackCrud.Shared.csproj", "{DDD57F38-BA96-4808-8EE2-F0467A5F42BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

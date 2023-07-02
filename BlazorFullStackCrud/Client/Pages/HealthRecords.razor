@@ -4,6 +4,8 @@
 
 @inject NavigationManager NavigationManager
 @inject IHealthRecordService HealthRecordService
+@inject ILocalStorageService LocalStorage
+@inject IJSRuntime JSRuntime
 
 @using Nethereum.Hex.HexConvertors.Extensions;
 @using Nethereum.Web3;
@@ -14,7 +16,27 @@
 @using Nethereum.Web3.Accounts;
 @using Nethereum.Contracts.Extensions;
 
+@*     Add the Authorized attribute for the Trusted Medical  Institution     *@
+
+
 <PageTitle>Health Records</PageTitle>
+
+<AuthorizeView>
+    
+    <NotAuthorized>
+        <span> You're not authorized to see this.</span>
+    </NotAuthorized>
+    
+    <Authorized>
+        <span><b>Welcome Andrei Ionescu!</b></span>
+        <br />
+        <br />  
+        <span><b><u>Being an employee from a medical institution, a trusted entity</u>, you're authorized to manage and put healthrecords to the Blockchain.</b></span>
+        <p></p>
+        <p></p>
+    </Authorized>
+
+</AuthorizeView>
 
 <h3>Health Records</h3>
 
@@ -69,7 +91,14 @@
                     <!-- Sign button -->
                     <!-- Triggers the signing process   --> 
                     <button class="btn btn-primary" @onclick="(() => SignHealthRecord(record.PatientId))">
-                        <i class="oi oi-key"></i>
+                        @if (isLoading)
+                        {
+                            <i class="loading-animation"></i> <!-- Add the CSS class for the loading animation -->
+                        }
+                        else
+                        {
+                            <i class="oi oi-key"></i>
+                        }
                     </button>
 
                     
@@ -79,11 +108,14 @@
         }
     </tbody>
 </table>
+
 <button class="btn btn-primary" @onclick="CreateNewRecord">Create New Record</button>
 
 
 @code {
-    
+
+    bool isLoading = false; // Used to show the loading animation
+
     protected override async Task OnInitializedAsync()
     {
         await HealthRecordService.GetHealthRecords();
@@ -99,10 +131,19 @@
         NavigationManager.NavigateTo($"record/{id}");
     }  
 
+ 
+    /*
+     * 
+     * This method calls the SignHealthRecord method in the HealthRecordService, passing the ID of the selected health record as a parameter.
+     * 
+     */
     async Task SignHealthRecord(int id)
     {
         try
         {
+            isLoading = true; // Set loading state to true
+
+
             // Call the SignHealthRecord method in the HealthRecordService
             var transactionHash = await HealthRecordService.SignHealthRecord(id);
 
@@ -117,6 +158,10 @@
         {
             // Handle the error
             Console.WriteLine(ex.Message);
+        }
+        finally
+        {
+            isLoading = false; // Set loading state to false
         }
     }
 

@@ -150,29 +150,7 @@ namespace BlazorFullStackCrud.Client.Services.HealthRecordService
          *
          * We're then using the _http again to call the 'AddSignatureToHealthRecord' API endpoint, defined in the HealthRecordController, to add the transaction hash to the health record in the database.
          */
-        //public async Task SignHealthRecord(int id)
-        //{
-        //    // Call the SignHealthRecord API endpoint in the BlockchainController
-        //    var response = await _http.PostAsync($"api/blockchain/{id}", null);
-
-        //    if (response.IsSuccessStatusCode)
-        //    {
-        //        // Get the transaction hash from the response body
-        //        var transactionHash = await response.Content.ReadAsStringAsync();
-
-        //        // Add the transaction hash to the health record in the database
-        //        await _http.PostAsJsonAsync($"api/healthrecords/{id}/addsignature", transactionHash);
-
-        //        // Refresh the health record list
-        //        await GetHealthRecords();
-        //    }
-        //    else
-        //    {
-        //        // Handle the error
-        //        var errorMessage = await response.Content.ReadAsStringAsync();
-        //        throw new Exception(errorMessage);
-        //    }
-        //}
+      
         public async Task<string> SignHealthRecord(int id)
         {
             // Call the SignHealthRecord API endpoint in the BlockchainController

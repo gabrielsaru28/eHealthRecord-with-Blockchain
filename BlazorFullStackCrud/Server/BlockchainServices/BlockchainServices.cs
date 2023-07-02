@@ -64,10 +64,10 @@ namespace BlazorFullStackCrud.Server.BlockchainServices
 
             var web3 = new Web3("http://localhost:8545");
             // Sender account
-            var privateKey = "0x6362fbe9c5dd15dafe9dd344f2757df9ba5045f343053bdfe824da193cce5a76";
-            var senderAddress = "0xa197f7CE436E4B6edf980a00571D1B04519861E6"; // Replace with the actual sender address
+            var privateKey = "0xc5a23241f9529cf308c0666dc3efd5222be63673235c649f73466b9e939f8f2f";
+            var senderAddress = "0x329e7cF730D04646E962B94921Ab7b5AC14b39E7"; // Replace with the actual sender address
             var account = new Account(privateKey);
-            var recipientAddress = "0xa197f7CE436E4B6edf980a00571D1B04519861E6"; // Replace with the desired recipient address
+            var recipientAddress = "0x329e7cF730D04646E962B94921Ab7b5AC14b39E7"; // Replace with the desired recipient address
 
             // Send transaction
             var transactionHash = await web3.TransactionManager.SendTransactionAsync(
