@@ -75,5 +75,7 @@ namespace BlazorFullStackCrud.Client
             return Convert.FromBase64String(base64);
         }
 
+        
+
     }
 }
